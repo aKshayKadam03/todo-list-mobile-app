@@ -1,5 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
+import uuid from 'react-native-uuid';
+;
  
 import {
   StyleSheet,
@@ -19,7 +21,7 @@ function Todo() {
  	if(task.trim() === "") return;
  
 	const payload = {
-		  id : Math.random() * Math.random(),
+		  id :uuid.v4(),
 		  task,
 		  status : false
 	  }
@@ -34,10 +36,16 @@ function Todo() {
 	  setData(arr)	 
   }
 
+  const taskRemoveHandler = (id) => {
+	  let arr = [...data];
+	  arr = arr.filter(solo => solo.id !== id)
+	  setData(arr)	
+  }
+
 
   const {header, input, listContainer , button} = styles;
   return (
-    <View>
+    <ScrollView>
       <Text style={header}>TODO List</Text>
       <TextInput
         onChangeText={task => setTask(task)}
@@ -47,16 +55,16 @@ function Todo() {
       />
       <Button
         onPress={onAddHandler}
-        title="Learn More"
+        title="Add Task"
         color="#841584"
 	 	style={button}
       />
-      <ScrollView style={listContainer}>
+      <View style={listContainer}>
         {data?.map(taskSolo => (
-          <List key={taskSolo.id} statusToggler={statusToggler} {...taskSolo} />
+          <List key={taskSolo.id} taskRemoveHandler={taskRemoveHandler} statusToggler={statusToggler} {...taskSolo} />
         ))}
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -74,8 +82,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
 	marginVertical: 10,
   },
+
   button : {
 	marginVertical: 100,
-
   }
 });
